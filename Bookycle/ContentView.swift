@@ -8,12 +8,44 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+   @Environment(BooksViewModel.self) var booksVM
+    
     var body: some View {
-        TabView(selection: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Selection@*/.constant(1)/*@END_MENU_TOKEN@*/) {
-            Text("Tab Content 1").tabItem { /*@START_MENU_TOKEN@*/Text("Tab Label 1")/*@END_MENU_TOKEN@*/ }.tag(1)
-            Image(systemName: "plus").tabItem { /*@START_MENU_TOKEN@*/Text("Tab Label 2")/*@END_MENU_TOKEN@*/ }.tag(2)
-            
+        NavigationStack{
+            TabView {
+                HomeView(searchText: "")
+                    .tabItem {
+                        Label("Home", systemImage: "house.fill")
+                    }
+                LibraryView()
+                    .tabItem {
+                        Label("Library", systemImage: "books.vertical.fill")
+                    }
+                ChallengeView()
+                    .tabItem {
+                        Label("Challenge", systemImage: "flag.fill")
+                    }
+                StatsView()
+                    .tabItem {
+                        Label("Stats", systemImage: "chart.bar.fill")
+                    }
+            }
+            .toolbar {
+                          ToolbarItem(placement: .navigationBarTrailing) {
+                              NavigationLink(destination: ProfileView()) {
+                                  Image("profile")
+                                      .resizable()
+                                      .frame(width: 40, height: 40)
+                                      .clipShape(Circle())
+                                      .overlay(
+                                          Circle().stroke(Color.gray, lineWidth: 1)
+                                      )
+                              }
+                          }
+                      }
         }
+        
         
         
     }

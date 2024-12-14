@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct BookycleApp: App {
+    @StateObject private var booksVM = BooksViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(booksVM)
         }
     }
 }
