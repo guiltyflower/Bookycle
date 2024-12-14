@@ -14,39 +14,39 @@ struct LibraryView: View {
     var body: some View {
         ScrollView{
             VStack {
-            
-            
-            //reading book list
-            VStack(alignment: .leading) {
-                Text("Currently Reading")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding(.leading)
-                ScrollView(.horizontal,showsIndicators: false){
-                    if booksVM.readingBooksList.isEmpty {
-                        EmptyReadingListView()
-                    } else {
-                        ReadingBooksListSmallView()
-                    }
-                }
-            }
-            
-            //readed book list
-            VStack(alignment: .leading) {
-                Text("Readed Books")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding(.leading)
-                ScrollView(.horizontal,showsIndicators: false){
-                    if booksVM.toReadBooks.isEmpty {
-                        EmptyReadingListView()
-                    } else {
-                        ReadedBooksListView()
-                    }
-                }
-            }
                 
-            //toreAad book list
+                
+                //reading book list
+                VStack(alignment: .leading) {
+                    Text("Currently Reading")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .padding(.leading)
+                    ScrollView(.horizontal,showsIndicators: false){
+                        if booksVM.readingBooksList.isEmpty {
+                            EmptyReadingListView()
+                        } else {
+                            ReadingBooksListSmallView()
+                        }
+                    }
+                }
+                
+                //readed book list
+                VStack(alignment: .leading) {
+                    Text("Readed Books")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .padding(.leading)
+                    ScrollView(.horizontal,showsIndicators: false){
+                        if booksVM.toReadBooks.isEmpty {
+                            EmptyReadingListView()
+                        } else {
+                            ReadedBooksListView()
+                        }
+                    }
+                }
+                
+                //toreAad book list
                 VStack(alignment: .leading) {
                     Text("To Read Books")
                         .font(.title)
@@ -60,28 +60,28 @@ struct LibraryView: View {
                         }
                     }
                 }
-            
-            //favourite books
-            VStack(alignment: .leading) {
-                Text("Favourite Books")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding(.leading)
-                ScrollView(.horizontal,showsIndicators: false){
-                    if booksVM.readingBooksList.isEmpty {
-                        EmptyReadingListView()
-                    } else {
-                        FavouriteBooksListView()
+                
+                //favourite books
+                VStack(alignment: .leading) {
+                    Text("Favourite Books")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .padding(.leading)
+                    ScrollView(.horizontal,showsIndicators: false){
+                        if booksVM.readingBooksList.isEmpty {
+                            EmptyReadingListView()
+                        } else {
+                            FavouriteBooksListView()
+                        }
                     }
                 }
-            }
-            
-            //Not finished books list
-                if !booksVM.readingBooksList.isEmpty {
+                
+                //Not finished books list
+                if !booksVM.unfinishedBooks.isEmpty {
                     UnfinishedBookListView()
                 }
-            
-        }}
+                
+            }}
     }
 }
 

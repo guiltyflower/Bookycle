@@ -67,6 +67,9 @@ class BooksViewModel: ObservableObject {
         if let index = unfinishedBooks.firstIndex(where: { $0.id == book.id }) {
             unfinishedBooks.remove(at: index)
         }
+        if let index = toReadBooks.firstIndex(where: { $0.id == book.id }) {
+            toReadBooks.remove(at: index)
+        }
         guard !completedBooks.contains(where: { $0.id == book.id }) else { return }
         completedBooks.append(book)
     }
