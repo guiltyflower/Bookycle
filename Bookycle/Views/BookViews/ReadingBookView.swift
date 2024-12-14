@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct ReadingBookView: View {
+    
     let book: Book
     @Environment(BooksViewModel.self) var booksVM
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         VStack {
             HStack {
@@ -34,6 +37,7 @@ struct ReadingBookView: View {
             
             Button(action: {
                 booksVM.markAsCompleted(book: book)
+                dismiss()
             }) {
                 Text("I've finished this book")
                     .foregroundColor(.white)
@@ -47,6 +51,7 @@ struct ReadingBookView: View {
             
             Button(action: {
                 booksVM.markAsUnfinished(book: book)
+                dismiss()
             }) {
                 Text("Add to unfinished")
                     .foregroundColor(.white)
@@ -57,7 +62,18 @@ struct ReadingBookView: View {
                     .shadow(radius: 5)
             }
             Button(action: {
-                            booksVM.toggleFavourite(book: book) // Aggiunge o rimuove il libro dai preferiti
+                            booksVM.toggleFavourite(book: book)
+                dismiss()
+                        }) {
+                            Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
+                                .foregroundColor(.red)
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .clipShape(Circle())
+                        }
+            
+            Button(action: {
+                            booksVM.toggleFavourite(book: book)
                         }) {
                             Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
                                 .foregroundColor(.red)

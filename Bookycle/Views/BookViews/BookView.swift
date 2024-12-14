@@ -66,6 +66,16 @@ struct BookView: View {
                     .cornerRadius(10)
                     .shadow(radius: 5)
             }
+            
+            Button(action: {
+                            booksVM.toggleFavourite(book: book)
+                        }) {
+                            Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
+                                .foregroundColor(.red)
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .clipShape(Circle())
+                        }
            
         }
         .navigationTitle(book.title)
