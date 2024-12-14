@@ -71,10 +71,14 @@ class BooksViewModel: ObservableObject {
         completedBooks.append(book)
     }
 
-    func addToFavourites(book:Book) {
-        guard !favouriteBooks.contains(where: { $0.id == book.id }) else { return }
-        favouriteBooks.append(book)
+    func toggleFavourite(book: Book) {
+        if let index = favouriteBooks.firstIndex(where: { $0.id == book.id }) {
+            favouriteBooks.remove(at: index)
+        } else {
+            favouriteBooks.append(book)
+        }
     }
+    
     
     func removeBookFromTracking(book: Book) {
         toReadBooks.removeAll { $0.id == book.id }

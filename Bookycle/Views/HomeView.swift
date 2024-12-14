@@ -114,7 +114,7 @@ struct HomeView: View {
                     if booksVM.readingBooksList.isEmpty {
                         EmptyReadingListView()
                     } else {
-                        ReadingBooksSmallView()
+                        ReadingBooksListSmallView()
                     }
                 }
             }

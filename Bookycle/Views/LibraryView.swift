@@ -26,7 +26,7 @@ struct LibraryView: View {
                     if booksVM.readingBooksList.isEmpty {
                         EmptyReadingListView()
                     } else {
-                        ReadingBooksSmallView()
+                        ReadingBooksListSmallView()
                     }
                 }
             }
@@ -41,7 +41,7 @@ struct LibraryView: View {
                     if booksVM.toReadBooks.isEmpty {
                         EmptyReadingListView()
                     } else {
-                        ReadedBooksView()
+                        ReadedBooksListView()
                     }
                 }
             }
@@ -56,7 +56,7 @@ struct LibraryView: View {
                         if booksVM.toReadBooks.isEmpty {
                             EmptyReadingListView()
                         } else {
-                            ToReadView()
+                            ToReadListView()
                         }
                     }
                 }
@@ -71,14 +71,14 @@ struct LibraryView: View {
                     if booksVM.readingBooksList.isEmpty {
                         EmptyReadingListView()
                     } else {
-                        FavouriteBooksView()
+                        FavouriteBooksListView()
                     }
                 }
             }
             
             //Not finished books list
                 if !booksVM.readingBooksList.isEmpty {
-                    UnfinishedBookView()
+                    UnfinishedBookListView()
                 }
             
         }}

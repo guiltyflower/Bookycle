@@ -1,5 +1,5 @@
 //
-//  ReadingBooksSmallView.swift
+//  ReadedBooksView.swift
 //  Bookycle
 //
 //  Created by Giovanni Fioretto on 13/12/24.
@@ -7,17 +7,16 @@
 
 import SwiftUI
 
-struct ReadingBooksSmallView: View {
+struct ReadedBooksListView: View {
     @EnvironmentObject var viewModel: BooksViewModel
-    
     var body: some View {
         ScrollView(.horizontal) {
             HStack {
                
-                ForEach(viewModel.readingBooksList, id: \.id) { book in
+                ForEach(viewModel.completedBooks, id: \.id) { book in
                     VStack {
                         NavigationLink{
-                            ReadingBookView(book: book)
+                            FinishedBookView(book: book)
                         } label: {
                             Image(book.imageCoverName)
                                 .resizable()
@@ -33,6 +32,6 @@ struct ReadingBooksSmallView: View {
 }
 
 #Preview {
-    ReadingBooksSmallView()
+    ReadedBooksListView()
         .environmentObject(BooksViewModel())
 }

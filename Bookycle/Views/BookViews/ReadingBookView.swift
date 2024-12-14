@@ -56,13 +56,25 @@ struct ReadingBookView: View {
                     .cornerRadius(10)
                     .shadow(radius: 5)
             }
+            Button(action: {
+                            booksVM.toggleFavourite(book: book) // Aggiunge o rimuove il libro dai preferiti
+                        }) {
+                            Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
+                                .foregroundColor(.red)
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .clipShape(Circle())
+                        }
         }
         .navigationTitle(book.title)
         .padding()
     }
 }
-/*
+
 #Preview {
-    ReadingBookView()
+ let viewModel = BooksViewModel()
+ let sampleBook = Book(title: "The Fifth Season", author: "N. K. Jemisin", numberOfPages: 506, imageCoverName: "fifthseason", isFavourite: false, isReading: false, currentPage: 0)
+ return ReadingBookView(book: sampleBook)
+     .environment(viewModel)
 }
-*/
+
