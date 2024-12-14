@@ -26,6 +26,7 @@ class BooksViewModel: ObservableObject {
     private(set) var readingBooksList: [Book] = []
     private(set) var unfinishedBooks: [Book] = []
     private(set) var completedBooks: [Book] = []
+    private(set) var favouriteBooks: [Book] = []
 
    
     func addToToReadBooks(book: Book) {
@@ -70,6 +71,10 @@ class BooksViewModel: ObservableObject {
         completedBooks.append(book)
     }
 
+    func addToFavourites(book:Book) {
+        guard !favouriteBooks.contains(where: { $0.id == book.id }) else { return }
+        favouriteBooks.append(book)
+    }
     
     func removeBookFromTracking(book: Book) {
         toReadBooks.removeAll { $0.id == book.id }

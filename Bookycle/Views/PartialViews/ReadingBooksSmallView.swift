@@ -16,10 +16,14 @@ struct ReadingBooksSmallView: View {
                
                 ForEach(viewModel.readingBooksList, id: \.id) { book in
                     VStack {
-                        Image(book.imageCoverName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 115, height: 170)
+                        NavigationLink{
+                            ReadingBookView(book: book)
+                        } label: {
+                            Image(book.imageCoverName)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 115, height: 170)
+                        }
                     }
                 }
             }

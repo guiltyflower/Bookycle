@@ -3,6 +3,7 @@ import SwiftUI
 struct BookView: View {
     let book: Book
     @Environment(BooksViewModel.self) var booksVM
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack {
@@ -28,6 +29,7 @@ struct BookView: View {
             
             Button(action: {
                 booksVM.addToToReadBooks(book: book)
+                dismiss()
             }) {
                 Text("Want to read")
                     .foregroundColor(.white)
@@ -40,7 +42,8 @@ struct BookView: View {
             .padding(.bottom, 10)
             
             Button(action: {
-                booksVM.startReadingBook(book: book) 
+                booksVM.startReadingBook(book: book)
+                dismiss()
             }) {
                 Text("Add to reading")
                     .foregroundColor(.white)
@@ -50,6 +53,20 @@ struct BookView: View {
                     .cornerRadius(10)
                     .shadow(radius: 5)
             }
+            .padding(.bottom, 10)
+            
+            Button(action: {
+                booksVM.markAsCompleted(book: book)
+            }) {
+                Text("I've red this book")
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(width: 300, height: 50)
+                    .background(Color.red)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
+            }
+           
         }
         .navigationTitle(book.title)
         .padding()

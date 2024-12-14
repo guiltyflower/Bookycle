@@ -33,7 +33,7 @@ struct LibraryView: View {
             
             //readed book list
             VStack(alignment: .leading) {
-                Text("To Read Books")
+                Text("Readed Books")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.leading)

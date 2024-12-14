@@ -8,11 +8,30 @@
 import SwiftUI
 
 struct ReadedBooksView: View {
+    @EnvironmentObject var viewModel: BooksViewModel
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView(.horizontal) {
+            HStack {
+               
+                ForEach(viewModel.completedBooks, id: \.id) { book in
+                    VStack {
+                        NavigationLink{
+                            ReadingBookView(book: book)
+                        } label: {
+                            Image(book.imageCoverName)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 115, height: 170)
+                        }
+                    }
+                }
+            }
+            .padding(.leading)
+        }
     }
 }
 
 #Preview {
     ReadedBooksView()
+        .environmentObject(BooksViewModel())
 }
