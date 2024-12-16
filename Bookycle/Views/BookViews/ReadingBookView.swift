@@ -8,10 +8,15 @@
 import SwiftUI
 
 struct ReadingBookView: View {
-    
     let book: Book
     @Environment(BooksViewModel.self) var booksVM
     @Environment(\.dismiss) private var dismiss
+    @State private var currentPageInput: String
+    
+    init(book: Book) {
+        self.book = book
+        _currentPageInput = State(initialValue: "\(book.currentPage)")
+    }
     
     var body: some View {
         VStack {
@@ -35,7 +40,41 @@ struct ReadingBookView: View {
             
             Spacer().frame(height: 20)
             
+            HStack {
+                Text("Page")
+                TextField("", text: $currentPageInput)
+                    .keyboardType(.numberPad)
+                    .frame(width: 50)
+                    .multilineTextAlignment(.center)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                Text("of \(book.numberOfPages)")
+            }
+            .padding()
+            
+            if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
+                let perc = Int((Double(currentPage) / Double(book.numberOfPages) * 100).rounded())
+                Text("\(perc)% read")
+            }
+            
+            Spacer().frame(height: 20)
+            
             Button(action: {
+                if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
+                      booksVM.updateCurrentPage(for: book, to: currentPage)
+                }
+            }) {
+                Text("Update")
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(width: 100, height: 50)
+                    .background(Color.green)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
+            }
+            .padding(.bottom, 10)
+            
+            Button(action: {
+               
                 booksVM.markAsCompleted(book: book)
                 dismiss()
             }) {
@@ -61,31 +100,23 @@ struct ReadingBookView: View {
                     .cornerRadius(10)
                     .shadow(radius: 5)
             }
-            Button(action: {
-                            booksVM.toggleFavourite(book: book)
-                dismiss()
-                        }) {
-                            Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
-                                .foregroundColor(.red)
-                                .padding()
-                                .background(Color(.systemGray6))
-                                .clipShape(Circle())
-                        }
             
             Button(action: {
-                            booksVM.toggleFavourite(book: book)
-                        }) {
-                            Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
-                                .foregroundColor(.red)
-                                .padding()
-                                .background(Color(.systemGray6))
-                                .clipShape(Circle())
-                        }
+                booksVM.toggleFavourite(book: book)
+                dismiss()
+            }) {
+                Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
+                    .foregroundColor(.red)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .clipShape(Circle())
+            }
         }
         .navigationTitle(book.title)
         .padding()
     }
 }
+
 
 #Preview {
  let viewModel = BooksViewModel()

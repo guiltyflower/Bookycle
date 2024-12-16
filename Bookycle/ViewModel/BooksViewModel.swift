@@ -83,6 +83,30 @@ class BooksViewModel: ObservableObject {
     }
     
     
+    func updateCurrentPage(for book: Book, to page: Int) {
+        guard let index = books.firstIndex(where: { $0.id == book.id }) else { return }
+        books[index].currentPage = page
+
+        // Sincronizza con altre liste, se necessario
+        if let readingIndex = readingBooksList.firstIndex(where: { $0.id == book.id }) {
+            readingBooksList[readingIndex].currentPage = page
+        }
+
+        if let toReadIndex = toReadBooks.firstIndex(where: { $0.id == book.id }) {
+            toReadBooks[toReadIndex].currentPage = page
+        }
+
+        if let unfinishedIndex = unfinishedBooks.firstIndex(where: { $0.id == book.id }) {
+            unfinishedBooks[unfinishedIndex].currentPage = page
+        }
+
+        if let completedIndex = completedBooks.firstIndex(where: { $0.id == book.id }) {
+            completedBooks[completedIndex].currentPage = page
+        }
+    }
+
+    
+    
     func removeBookFromTracking(book: Book) {
         toReadBooks.removeAll { $0.id == book.id }
         readingBooksList.removeAll { $0.id == book.id }
