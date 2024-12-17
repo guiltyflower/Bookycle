@@ -18,4 +18,6 @@ struct Book: Identifiable {
     var isFavourite: Bool
     var isReading: Bool
     var currentPage: Int
+    var startDate: Date? 
+    var endDate: Date?
 }

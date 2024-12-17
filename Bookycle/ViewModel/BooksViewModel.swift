@@ -82,12 +82,38 @@ class BooksViewModel: ObservableObject {
         }
     }
     
+    // UPDATE READING DATE
+   /*old one func setStartDate(for book: Book) {
+        if let index = readingBooksList.firstIndex(where: { $0.id == book.id }) {
+            readingBooksList[index].startDate = Date() // Imposta la data di oggi
+        }
+    }*/
+    func setStartDate(for book: Book) {
+        var updatedBook = book
+        updatedBook.startDate = Date() // Imposta la data di oggi
+        updateBookInAllLists(updatedBook)
+    }
+
+    
+    func setEndDate(for book: Book) {
+        if let index = readingBooksList.firstIndex(where: { $0.id == book.id }) {
+            readingBooksList[index].endDate = Date() // Imposta la data di oggi
+        }
+        
+        
+        if let index = readingBooksList.firstIndex(where: { $0.id == book.id }) {
+            var completedBook = readingBooksList.remove(at: index)
+            completedBook.endDate = Date()
+            completedBooks.append(completedBook)
+        }
+    }
+
+    
     
     func updateCurrentPage(for book: Book, to page: Int) {
         guard let index = books.firstIndex(where: { $0.id == book.id }) else { return }
         books[index].currentPage = page
 
-        // Sincronizza con altre liste, se necessario
         if let readingIndex = readingBooksList.firstIndex(where: { $0.id == book.id }) {
             readingBooksList[readingIndex].currentPage = page
         }
@@ -106,20 +132,34 @@ class BooksViewModel: ObservableObject {
     }
 
     
-    
+    /* NON ANCORA IMPLEMENTATA*/
+/*
     func removeBookFromTracking(book: Book) {
         toReadBooks.removeAll { $0.id == book.id }
         readingBooksList.removeAll { $0.id == book.id }
         unfinishedBooks.removeAll { $0.id == book.id }
         completedBooks.removeAll { $0.id == book.id }
     }
-
-   
+*/
+    
     func syncWithBooksData() {
         toReadBooks = toReadBooks.filter { book in books.contains(where: { $0.id == book.id }) }
         readingBooksList = readingBooksList.filter { book in books.contains(where: { $0.id == book.id }) }
         unfinishedBooks = unfinishedBooks.filter { book in books.contains(where: { $0.id == book.id }) }
         completedBooks = completedBooks.filter { book in books.contains(where: { $0.id == book.id }) }
     }
-
+    private func updateBookInAllLists(_ updatedBook: Book) {
+        if let index = toReadBooks.firstIndex(where: { $0.id == updatedBook.id }) {
+            toReadBooks[index] = updatedBook
+        }
+        if let index = readingBooksList.firstIndex(where: { $0.id == updatedBook.id }) {
+            readingBooksList[index] = updatedBook
+        }
+        if let index = unfinishedBooks.firstIndex(where: { $0.id == updatedBook.id }) {
+            unfinishedBooks[index] = updatedBook
+        }
+        if let index = completedBooks.firstIndex(where: { $0.id == updatedBook.id }) {
+            completedBooks[index] = updatedBook
+        }
+    }
 }

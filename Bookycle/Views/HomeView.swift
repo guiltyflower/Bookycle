@@ -1,19 +1,26 @@
-//
-//  HomeView.swift
-//  Bookycle
-//
-//  Created by Giovanni Fioretto on 09/12/24.
-//
-
 import SwiftUI
 
 struct HomeView: View {
     @Environment(BooksViewModel.self) var booksVM
     @State var searchText: String
+    
+ 
+    var filteredBooks: [Book] {
+        if searchText.isEmpty {
+            return booksVM.books
+        } else {
+            return booksVM.books.filter { book in
+                book.title.localizedCaseInsensitiveContains(searchText) ||
+                book.author.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
+    
     var body: some View {
-        ScrollView{
+        ScrollView {
             Spacer()
             Spacer()
+            
             TextField("SEARCH", text: $searchText)
                 .padding(10)
                 .background(Color(.systemGray6))
@@ -33,84 +40,76 @@ struct HomeView: View {
                     }
                 )
                 .padding(.horizontal)
-            //stats
-            VStack(alignment: .leading) {
-                Text("Stats")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding(.leading)
-                HStack{
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(lineWidth: 1)
-                            .frame(width: 180, height: 90)
-                        
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(Color(red: 245/255, green: 245/255, blue: 220/255))
-                            .frame(width: 180, height: 90)
-                        
-                        
-                        VStack{
-                            Text("hello")
-                            Rectangle()
-                                .frame(width: 180,height: 1)
-                            Text("254")
-                        }
-                    }
+            
+            if !searchText.isEmpty {
+                VStack(alignment: .leading) {
+                    Text("Search Results")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .padding(.leading)
                     
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(lineWidth: 1)
-                            .frame(width: 180, height: 90)
-                        
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(Color(red: 245/255, green: 245/255, blue: 220/255))
-                            .frame(width: 180, height: 90)
-                        
-                        
-                        VStack{
-                            Text("hello")
-                            Rectangle()
-                                .frame(width: 180,height: 1)
-                            Text("254")
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack {
+                            ForEach(filteredBooks, id: \.id) { book in
+                                NavigationLink(destination: BookView(book: book)) {
+                                    HStack {
+                                        Image(book.imageCoverName)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 50, height: 75)
+                                            .cornerRadius(5)
+                                        
+                                        VStack(alignment: .leading) {
+                                            Text(book.title)
+                                                .font(.headline)
+                                            Text(book.author)
+                                                .font(.subheadline)
+                                        }
+                                        Spacer()
+                                    }
+                                    .padding()
+                                }
+                                Divider()
+                            }
                         }
                     }
                 }
             }
             
-            //all books
+            VStack(alignment: .leading) {
+                HStack {
+                    StatCardView(title: "Books Read", value: "\(booksVM.completedBooks.count)")
+                    StatCardView(title: "Books Reading", value: "\(booksVM.readingBooksList.count)")
+                }
+            }
+            
             VStack(alignment: .leading) {
                 Text("New Books")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.leading)
-                ScrollView(.horizontal,showsIndicators: false){
+                ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(booksVM.books){ book in
-                            VStack{
-                                NavigationLink{
-                                    BookView(book: book)
-                                } label: {
-                                    Image(book.imageCoverName)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 115, height: 170)
-                                }
-                                
-                                
+                        ForEach(booksVM.books, id: \.id) { book in
+                            NavigationLink {
+                                BookView(book: book)
+                            } label: {
+                                Image(book.imageCoverName)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 115, height: 170)
                             }
                         }
                     }.padding(.leading)
-                    
                 }
             }
-            //currently reading
+            
             VStack(alignment: .leading) {
                 Text("Currently Reading")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.leading)
-                ScrollView(.horizontal,showsIndicators: false){
+                ScrollView(.horizontal, showsIndicators: false) {
                     if booksVM.readingBooksList.isEmpty {
                         EmptyReadingListView()
                     } else {
@@ -118,52 +117,35 @@ struct HomeView: View {
                     }
                 }
             }
+            
             VStack(alignment: .leading) {
                 Text("Favourites Books")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.leading)
-                ScrollView(.horizontal,showsIndicators: false){
-                    HStack(){
-                        VStack{
-                            Image("fifthseason")
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(booksVM.favouriteBooks, id: \.id) { book in
+                            Image(book.imageCoverName)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 115, height: 170)
-                            
                         }
-                        VStack{
-                            Image("obeliskgate")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 115, height: 170)
-                            
-                            
-                        }
-                        VStack{
-                            Image("stonesky")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 115, height: 170)
-                            
-                        }
-                        VStack{
-                            Image("threebody")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 115, height: 170)
-                            
-                        }
-                        
-                    }
-                    .padding(.leading)
-                    
+                    }.padding(.leading)
                 }
             }
         }
+        ZStack{}
     }
 }
 
 #Preview {
-    HomeView(searchText: "")
+    let booksVM = BooksViewModel()
+    booksVM.books = [
+        Book(title: "The Fifth Season", author: "N. K. Jemisin", numberOfPages: 506, imageCoverName: "fifthseason", isFavourite: true, isReading: false, currentPage: 0),
+        Book(title: "The Three-Body Problem", author: "Liu Cixin", numberOfPages: 390, imageCoverName: "threebody", isFavourite: false, isReading: true, currentPage: 150)
+    ]
+
+    return HomeView(searchText: "")
+        .environmentObject(booksVM)
 }

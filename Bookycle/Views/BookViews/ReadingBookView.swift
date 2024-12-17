@@ -101,6 +101,14 @@ struct ReadingBookView: View {
                     .shadow(radius: 5)
             }
             
+            if let startDate = book.startDate {
+                Text("Started on: \(startDate.formatted(date: .numeric, time: .omitted))")
+            } else {
+                Button("Set Start Date") {
+                    booksVM.setStartDate(for: book)
+                }
+            }
+            
             Button(action: {
                 booksVM.toggleFavourite(book: book)
                 dismiss()
