@@ -22,18 +22,20 @@ struct ContentView: View {
                     .tabItem {
                         Label("Library", systemImage: "books.vertical.fill")
                     }
-                ChallengeView()
+               /* ChallengeView()
                     .tabItem {
                         Label("Challenge", systemImage: "flag.fill")
                     }
-                StatsView()
+                 StatsView()
                     .tabItem {
                         Label("Stats", systemImage: "chart.bar.fill")
                     }
+                */
             }
+            .tint(Color(red: 169/255, green: 154/255, blue: 123/255))
             .toolbar {
                           ToolbarItem(placement: .navigationBarTrailing) {
-                              NavigationLink(destination: ProfileView()) {
+                             
                                   Image("profile")
                                       .resizable()
                                       .frame(width: 40, height: 40)
@@ -41,11 +43,12 @@ struct ContentView: View {
                                       .overlay(
                                           Circle().stroke(Color.gray, lineWidth: 1)
                                       )
-                              }
+                              
                           }
                       }
             .toolbarBackground(Color(red: 242/255, green: 220/255, blue: 177/255), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            
         }
         
         

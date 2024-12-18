@@ -19,128 +19,137 @@ struct ReadingBookView: View {
     }
     
     var body: some View {
-        VStack {
-            ZStack{
-                Image("\(book.imageCoverName)")
-                    .resizable()
-                    .frame(width: 190, height: 280)
-                    .scaledToFit()
-                    .border(Color.black, width: 1)
-                    .padding(.top)
+        ZStack {
+            LinearGradient(stops: [
+                Gradient.Stop(color: Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255), location: 0.55),
+                Gradient.Stop(color: .white, location: 0.75),
+            ], startPoint: .top, endPoint: .bottom)
+            .ignoresSafeArea()
+            VStack {
+                ZStack{
+                    Image("\(book.imageCoverName)")
+                        .resizable()
+                        .frame(width: 190, height: 280)
+                        .scaledToFit()
+                        .border(Color.black, width: 1)
+                        .padding(.top)
+                    Button(action: {
+                        booksVM.toggleFavourite(book: book)
+                    }) {
+                        Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
+                            .foregroundColor(.red)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .clipShape(Circle())
+                    }
+                    .offset(x:150,y:-120)
+                    
+                    
+                }
+                
+                HStack {
+                    
+                    
+                    VStack() {
+                        Text(book.title)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .textCase(.uppercase)
+                            .foregroundStyle(Color(red: 169/255, green: 154/255, blue: 123/255))
+                        HStack{
+                            Text(book.author)
+                                .font(.subheadline)
+                            
+                            Text("\(book.numberOfPages) pages")
+                                .font(.footnote)
+                                .fontWeight(.light)
+                        }
+                        
+                    }
+                    .padding(.leading , 10)
+                }
+                
+                Spacer().frame(height: 20)
+                
+                HStack {
+                    Text("Page")
+                    TextField("", text: $currentPageInput)
+                        .keyboardType(.numberPad)
+                        .frame(width: 50)
+                        .multilineTextAlignment(.center)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    Text("of \(book.numberOfPages)")
+                    Spacer()
+                    if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
+                        let perc = Int((Double(currentPage) / Double(book.numberOfPages) * 100).rounded())
+                        Text("\(perc)%")
+                            .foregroundStyle(Color(red: 169/255, green: 154/255, blue: 123/255))
+                        Text("read")
+                    }
+                }
+                .padding()
+                
                 Button(action: {
-                    booksVM.toggleFavourite(book: book)
+                    if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
+                        booksVM.updateCurrentPage(for: book, to: currentPage)
+                    }
+                }) {
+                    Text("Update")
+                        .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
+                        .padding()
+                        .frame(width: 100, height: 50)
+                        .background(Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255))
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
+                }
+                .padding(.bottom, 10)
+                
+                Spacer().frame(height: 20)
+                
+                
+                
+                Button(action: {
+                    
+                    booksVM.markAsCompleted(book: book)
                     dismiss()
                 }) {
-                    Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
-                        .foregroundColor(.red)
+                    Text("I've finished this book")
+                        .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
                         .padding()
-                        .background(Color(.systemGray6))
-                        .clipShape(Circle())
+                        .frame(width: 300, height: 50)
+                        .background(Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255))
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
                 }
-                .offset(x:150,y:-120)
-            
-               
-            }
-          
-            HStack {
+                .padding(.bottom, 10)
                 
-                
-                VStack() {
-                    Text(book.title)
-                        .font(.headline)
-                        .textCase(.uppercase)
-                        .foregroundStyle(Color(red: 169/255, green: 154/255, blue: 123/255))
-                    HStack{
-                        Text(book.author)
-                            .font(.subheadline)
-                            
-                        Text("\(book.numberOfPages) pages")
-                            .font(.footnote)
-                            .fontWeight(.light)
-                    }
-                   
+                Button(action: {
+                    booksVM.markAsUnfinished(book: book)
+                    dismiss()
+                }) {
+                    Text("Add to unfinished")
+                        .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
+                        .padding()
+                        .frame(width: 300, height: 50)
+                        .background(Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255))
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
                 }
-                .padding(.leading , 10)
-            }
-            
-            Spacer().frame(height: 20)
-            
-            HStack {
-                Text("Page")
-                TextField("", text: $currentPageInput)
-                    .keyboardType(.numberPad)
-                    .frame(width: 50)
-                    .multilineTextAlignment(.center)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                Text("of \(book.numberOfPages)")
+                
+                /*button for the start reading date
+                 if let startDate = book.startDate {
+                 Text("Started on: \(startDate.formatted(date: .numeric, time: .omitted))")
+                 } else {
+                 Button("Set Start Date") {
+                 booksVM.setStartDate(for: book)
+                 }
+                 }
+                 */
                 Spacer()
-                if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
-                    let perc = Int((Double(currentPage) / Double(book.numberOfPages) * 100).rounded())
-                    Text("\(perc)%")
-                        .foregroundStyle(Color(red: 169/255, green: 154/255, blue: 123/255))
-                    Text("read")
-                }
             }
+            .navigationTitle(book.title)
             .padding()
-            
-            Button(action: {
-                if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
-                      booksVM.updateCurrentPage(for: book, to: currentPage)
-                }
-            }) {
-                Text("Update")
-                    .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
-                    .padding()
-                    .frame(width: 100, height: 50)
-                    .background(Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255))
-                    .cornerRadius(10)
-                    .shadow(radius: 5)
-            }
-            .padding(.bottom, 10)
-            
-            Spacer().frame(height: 20)
-            
-
-            
-            Button(action: {
-               
-                booksVM.markAsCompleted(book: book)
-                dismiss()
-            }) {
-                Text("I've finished this book")
-                    .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
-                    .padding()
-                    .frame(width: 300, height: 50)
-                    .background(Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255))
-                    .cornerRadius(10)
-                    .shadow(radius: 5)
-            }
-            .padding(.bottom, 10)
-            
-            Button(action: {
-                booksVM.markAsUnfinished(book: book)
-                dismiss()
-            }) {
-                Text("Add to unfinished")
-                    .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
-                    .padding()
-                    .frame(width: 300, height: 50)
-                    .background(Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255))
-                    .cornerRadius(10)
-                    .shadow(radius: 5)
-            }
-            
-            if let startDate = book.startDate {
-                Text("Started on: \(startDate.formatted(date: .numeric, time: .omitted))")
-            } else {
-                Button("Set Start Date") {
-                    booksVM.setStartDate(for: book)
-                }
-            }
-            Spacer()
         }
-        .navigationTitle(book.title)
-        .padding()
     }
 }
 
