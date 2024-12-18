@@ -8,7 +8,8 @@ struct BookView: View {
     var body: some View {
         ZStack {
             LinearGradient(stops: [
-                Gradient.Stop(color: Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255), location: 0.55),
+                Gradient.Stop(color: Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255), location: 0.55)
+                ,
                 Gradient.Stop(color: .white, location: 0.75),
             ], startPoint: .top, endPoint: .bottom)
             .ignoresSafeArea()
