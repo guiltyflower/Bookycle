@@ -12,11 +12,18 @@ struct ReadingBookView: View {
     @Environment(BooksViewModel.self) var booksVM
     @Environment(\.dismiss) private var dismiss
     @State private var currentPageInput: String
+    @FocusState private var cpIsFocused: Bool
+    
     
     init(book: Book) {
         self.book = book
         _currentPageInput = State(initialValue: "\(book.currentPage)")
     }
+    
+
+    private func dismissKeyboard() {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
     
     var body: some View {
         ZStack {
@@ -81,9 +88,10 @@ struct ReadingBookView: View {
                     TextField("", text: $currentPageInput)
                         .keyboardType(.numberPad)
                         .frame(width: 50)
+                        .focused($cpIsFocused)
                         .multilineTextAlignment(.center)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .accessibilityValue("insert here the current page. Actualli you are at page \(book.currentPage)")
+                        .accessibilityValue("insert here the current page. Actually you are at page \(book.currentPage)")
                     Text("of \(book.numberOfPages)")
                     Spacer()
                     if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
@@ -99,6 +107,7 @@ struct ReadingBookView: View {
                 Button(action: {
                     if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
                         booksVM.updateCurrentPage(for: book, to: currentPage)
+                        cpIsFocused = false
                     }
                 }) {
                     Text("Update")
@@ -156,6 +165,9 @@ struct ReadingBookView: View {
             }
             .navigationTitle(book.title)
             .padding()
+            .onTapGesture {
+                    dismissKeyboard()
+                }
         }
     }
 }
