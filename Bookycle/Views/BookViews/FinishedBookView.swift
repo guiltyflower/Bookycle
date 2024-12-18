@@ -32,7 +32,7 @@ struct FinishedBookView: View {
                        
                     }) {
                         Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
-                            .foregroundColor(.red)
+                            .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
                             .padding()
                             .background(Color(.systemGray6))
                             .clipShape(Circle())

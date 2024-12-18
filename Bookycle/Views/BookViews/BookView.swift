@@ -27,10 +27,11 @@ struct BookView: View {
                         dismiss()
                     }) {
                         Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
-                            .foregroundColor(.red)
+                            .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
                             .padding()
                             .background(Color(.systemGray6))
-                            .clipShape(Circle()).accessibilityValue("tap to add to favourite")
+                            .clipShape(Circle())
+                            .accessibilityValue("tap to add to favourite")
                     }
                     .offset(x:150,y:-120)
                     
