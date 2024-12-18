@@ -29,6 +29,7 @@ struct UnfinishedBookListView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 115, height: 170)
+                                    .accessibilityValue("the cover for the book \(book.title)")
                             }
                         }
                     }

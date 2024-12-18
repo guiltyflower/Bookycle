@@ -17,6 +17,7 @@ struct EmptyReadingListView: View {
             Text("Your reading list is empty")
                 .frame(width: 115, height: 170)
                 .foregroundStyle(Color(red: 169/255, green: 154/255, blue: 123/255))
+                .accessibilityValue("This indicates that you have to add books to your library to see them here")
         }
         .padding(.leading)
     }

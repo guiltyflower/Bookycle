@@ -21,6 +21,7 @@ struct BookView: View {
                         .scaledToFit()
                         .border(Color.black, width: 1)
                         .padding(.top)
+                        .accessibilityValue("cover of the book")
                     Button(action: {
                         booksVM.toggleFavourite(book: book)
                         dismiss()
@@ -29,7 +30,7 @@ struct BookView: View {
                             .foregroundColor(.red)
                             .padding()
                             .background(Color(.systemGray6))
-                            .clipShape(Circle())
+                            .clipShape(Circle()).accessibilityValue("tap to add to favourite")
                     }
                     .offset(x:150,y:-120)
                     
@@ -45,13 +46,16 @@ struct BookView: View {
                             .fontWeight(.bold)
                             .textCase(.uppercase)
                             .foregroundStyle(Color(red: 169/255, green: 154/255, blue: 123/255))
+                            .accessibilityValue("title of the book")
                         HStack{
                             Text(book.author)
                                 .font(.subheadline)
+                                .accessibilityValue("author of the book")
                             
                             Text("\(book.numberOfPages) pages")
                                 .font(.footnote)
                                 .fontWeight(.light)
+                                .accessibilityValue("number of pages of the book")
                         }
                         
                     }

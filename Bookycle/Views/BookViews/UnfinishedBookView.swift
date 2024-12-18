@@ -30,6 +30,7 @@ struct UnfinishedBookView: View {
                         .scaledToFit()
                         .border(Color.black, width: 1)
                         .padding(.top)
+                        .accessibilityValue("cover of the book")
                     Button(action: {
                         booksVM.toggleFavourite(book: book)
                     }) {
@@ -38,6 +39,7 @@ struct UnfinishedBookView: View {
                             .padding()
                             .background(Color(.systemGray6))
                             .clipShape(Circle())
+                            .accessibilityValue("tap to add to favourite")
                     }
                     .offset(x:150,y:-120)
                     
