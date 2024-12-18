@@ -68,7 +68,7 @@ struct LibraryView: View {
                         .fontWeight(.bold)
                         .padding(.leading)
                     ScrollView(.horizontal,showsIndicators: false){
-                        if booksVM.readingBooksList.isEmpty {
+                        if booksVM.favouriteBooks.isEmpty {
                             EmptyReadingListView()
                         } else {
                             FavouriteBooksListView()
