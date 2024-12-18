@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+
 @Observable
 class BooksViewModel: ObservableObject {
     var books = [
@@ -20,46 +21,90 @@ class BooksViewModel: ObservableObject {
         Book(title: "Time Traveler's Wife", author: "Audrey Niffenegger", numberOfPages: 503, imageCoverName: "timetraveler", isFavourite: false, isReading: false, currentPage: 0),
         Book(title: "Full Moon Coffee Shop", author: "Mai Mochizuki", numberOfPages: 304, imageCoverName: "fullmoon", isFavourite: false, isReading: false, currentPage: 0)
     ]
-
-
+    
     private(set) var toReadBooks: [Book] = []
     private(set) var readingBooksList: [Book] = []
     private(set) var unfinishedBooks: [Book] = []
     private(set) var completedBooks: [Book] = []
     private(set) var favouriteBooks: [Book] = []
 
-   
-    func addToToReadBooks(book: Book) {
-        guard !toReadBooks.contains(where: { $0.id == book.id }) else { return }
-        toReadBooks.append(book)
+    
+    private var persistenceURL: URL {
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return documentDirectory.appendingPathComponent("booksData.json")
+    }
+
+    
+    init() {
+        loadData()
+    }
+
+    
+    func saveData() {
+        let dataToSave = [
+            "toReadBooks": toReadBooks,
+            "readingBooksList": readingBooksList,
+            "unfinishedBooks": unfinishedBooks,
+            "completedBooks": completedBooks,
+            "favouriteBooks": favouriteBooks
+        ]
+        
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(dataToSave)
+            try data.write(to: persistenceURL, options: .atomic)
+            print("Data saved successfully")
+        } catch {
+            print("Error saving data: \(error)")
+        }
     }
 
   
+    func loadData() {
+        do {
+            let data = try Data(contentsOf: persistenceURL)
+            let decoder = JSONDecoder()
+            let decodedData = try decoder.decode([String: [Book]].self, from: data)
+            
+            toReadBooks = decodedData["toReadBooks"] ?? []
+            readingBooksList = decodedData["readingBooksList"] ?? []
+            unfinishedBooks = decodedData["unfinishedBooks"] ?? []
+            completedBooks = decodedData["completedBooks"] ?? []
+            favouriteBooks = decodedData["favouriteBooks"] ?? []
+            print("Data loaded successfully")
+        } catch {
+            print("Error loading data: \(error)")
+        }
+    }
+
+    
+    func addToToReadBooks(book: Book) {
+        guard !toReadBooks.contains(where: { $0.id == book.id }) else { return }
+        toReadBooks.append(book)
+        saveData()
+    }
+
+   
     func startReadingBook(book: Book) {
         if let index = toReadBooks.firstIndex(where: { $0.id == book.id }) {
-            toReadBooks.remove(at: index) 
+            toReadBooks.remove(at: index)
         }
         guard !readingBooksList.contains(where: { $0.id == book.id }) else { return }
         readingBooksList.append(book)
+        saveData()
     }
 
-    /*
-     FOr the unfinished book, I remove one from the reading
-     and I add one to the unfinished books
-     */
+    
     func markAsUnfinished(book: Book) {
         if let index = readingBooksList.firstIndex(where: { $0.id == book.id }) {
             readingBooksList.remove(at: index)
         }
         guard !unfinishedBooks.contains(where: { $0.id == book.id }) else { return }
         unfinishedBooks.append(book)
+        saveData()
     }
 
-    /*
-     To add a book that the user has finished.
-     I'll remove it from the reading list (also checking the unfinished one)
-     
-     */
+    
     func markAsCompleted(book: Book) {
         if let index = readingBooksList.firstIndex(where: { $0.id == book.id }) {
             readingBooksList.remove(at: index)
@@ -70,46 +115,21 @@ class BooksViewModel: ObservableObject {
         if let index = toReadBooks.firstIndex(where: { $0.id == book.id }) {
             toReadBooks.remove(at: index)
         }
-        guard !completedBooks.contains(where: { $0.id == book.id }) else { return }
         completedBooks.append(book)
+        saveData()
     }
 
+    
     func toggleFavourite(book: Book) {
         if let index = favouriteBooks.firstIndex(where: { $0.id == book.id }) {
             favouriteBooks.remove(at: index)
         } else {
             favouriteBooks.append(book)
         }
-    }
-    
-    // UPDATE READING DATE
-   /*old one func setStartDate(for book: Book) {
-        if let index = readingBooksList.firstIndex(where: { $0.id == book.id }) {
-            readingBooksList[index].startDate = Date() // Imposta la data di oggi
-        }
-    }*/
-    func setStartDate(for book: Book) {
-        var updatedBook = book
-        updatedBook.startDate = Date() // Imposta la data di oggi
-        updateBookInAllLists(updatedBook)
+        saveData()
     }
 
-    
-    func setEndDate(for book: Book) {
-        if let index = readingBooksList.firstIndex(where: { $0.id == book.id }) {
-            readingBooksList[index].endDate = Date() // Imposta la data di oggi
-        }
-        
-        
-        if let index = readingBooksList.firstIndex(where: { $0.id == book.id }) {
-            var completedBook = readingBooksList.remove(at: index)
-            completedBook.endDate = Date()
-            completedBooks.append(completedBook)
-        }
-    }
-
-    
-    
+  
     func updateCurrentPage(for book: Book, to page: Int) {
         guard let index = books.firstIndex(where: { $0.id == book.id }) else { return }
         books[index].currentPage = page
@@ -129,37 +149,7 @@ class BooksViewModel: ObservableObject {
         if let completedIndex = completedBooks.firstIndex(where: { $0.id == book.id }) {
             completedBooks[completedIndex].currentPage = page
         }
-    }
 
-    
-    /* NON ANCORA IMPLEMENTATA*/
-/*
-    func removeBookFromTracking(book: Book) {
-        toReadBooks.removeAll { $0.id == book.id }
-        readingBooksList.removeAll { $0.id == book.id }
-        unfinishedBooks.removeAll { $0.id == book.id }
-        completedBooks.removeAll { $0.id == book.id }
-    }
-*/
-    
-    func syncWithBooksData() {
-        toReadBooks = toReadBooks.filter { book in books.contains(where: { $0.id == book.id }) }
-        readingBooksList = readingBooksList.filter { book in books.contains(where: { $0.id == book.id }) }
-        unfinishedBooks = unfinishedBooks.filter { book in books.contains(where: { $0.id == book.id }) }
-        completedBooks = completedBooks.filter { book in books.contains(where: { $0.id == book.id }) }
-    }
-    private func updateBookInAllLists(_ updatedBook: Book) {
-        if let index = toReadBooks.firstIndex(where: { $0.id == updatedBook.id }) {
-            toReadBooks[index] = updatedBook
-        }
-        if let index = readingBooksList.firstIndex(where: { $0.id == updatedBook.id }) {
-            readingBooksList[index] = updatedBook
-        }
-        if let index = unfinishedBooks.firstIndex(where: { $0.id == updatedBook.id }) {
-            unfinishedBooks[index] = updatedBook
-        }
-        if let index = completedBooks.firstIndex(where: { $0.id == updatedBook.id }) {
-            completedBooks[index] = updatedBook
-        }
+        saveData()
     }
 }
