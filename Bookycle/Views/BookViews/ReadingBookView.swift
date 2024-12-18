@@ -20,22 +20,47 @@ struct ReadingBookView: View {
     
     var body: some View {
         VStack {
-            HStack {
+            ZStack{
                 Image("\(book.imageCoverName)")
                     .resizable()
-                    .frame(width: 170, height: 240)
+                    .frame(width: 190, height: 280)
                     .scaledToFit()
                     .border(Color.black, width: 1)
+                    .padding(.top)
+                Button(action: {
+                    booksVM.toggleFavourite(book: book)
+                    dismiss()
+                }) {
+                    Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
+                        .foregroundColor(.red)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .clipShape(Circle())
+                }
+                .offset(x:150,y:-120)
+            
+               
+            }
+          
+            HStack {
                 
-                VStack(alignment: .leading) {
+                
+                VStack() {
                     Text(book.title)
                         .font(.headline)
-                    Text(book.author)
-                        .font(.subheadline)
-                    Text("\(book.numberOfPages) pages")
-                        .font(.footnote)
+                        .textCase(.uppercase)
+                        .foregroundStyle(Color(red: 169/255, green: 154/255, blue: 123/255))
+                    HStack{
+                        Text(book.author)
+                            .font(.subheadline)
+                            
+                        Text("\(book.numberOfPages) pages")
+                            .font(.footnote)
+                            .fontWeight(.light)
+                    }
+                   
                 }
-                .padding(.leading, 10)
+                .padding(.leading , 10)
             }
             
             Spacer().frame(height: 20)
@@ -48,15 +73,15 @@ struct ReadingBookView: View {
                     .multilineTextAlignment(.center)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 Text("of \(book.numberOfPages)")
+                Spacer()
+                if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
+                    let perc = Int((Double(currentPage) / Double(book.numberOfPages) * 100).rounded())
+                    Text("\(perc)%")
+                        .foregroundStyle(Color(red: 169/255, green: 154/255, blue: 123/255))
+                    Text("read")
+                }
             }
             .padding()
-            
-            if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
-                let perc = Int((Double(currentPage) / Double(book.numberOfPages) * 100).rounded())
-                Text("\(perc)% read")
-            }
-            
-            Spacer().frame(height: 20)
             
             Button(action: {
                 if let currentPage = Int(currentPageInput), currentPage <= book.numberOfPages {
@@ -64,14 +89,18 @@ struct ReadingBookView: View {
                 }
             }) {
                 Text("Update")
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
                     .padding()
                     .frame(width: 100, height: 50)
-                    .background(Color.green)
+                    .background(Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255))
                     .cornerRadius(10)
                     .shadow(radius: 5)
             }
             .padding(.bottom, 10)
+            
+            Spacer().frame(height: 20)
+            
+
             
             Button(action: {
                
@@ -79,10 +108,10 @@ struct ReadingBookView: View {
                 dismiss()
             }) {
                 Text("I've finished this book")
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
                     .padding()
                     .frame(width: 300, height: 50)
-                    .background(Color.green)
+                    .background(Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255))
                     .cornerRadius(10)
                     .shadow(radius: 5)
             }
@@ -93,10 +122,10 @@ struct ReadingBookView: View {
                 dismiss()
             }) {
                 Text("Add to unfinished")
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(red: 169/255, green: 154/255, blue: 123/255))
                     .padding()
                     .frame(width: 300, height: 50)
-                    .background(Color.red)
+                    .background(Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255))
                     .cornerRadius(10)
                     .shadow(radius: 5)
             }
@@ -108,17 +137,7 @@ struct ReadingBookView: View {
                     booksVM.setStartDate(for: book)
                 }
             }
-            
-            Button(action: {
-                booksVM.toggleFavourite(book: book)
-                dismiss()
-            }) {
-                Image(systemName: booksVM.favouriteBooks.contains(where: { $0.id == book.id }) ? "heart.fill" : "heart")
-                    .foregroundColor(.red)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .clipShape(Circle())
-            }
+            Spacer()
         }
         .navigationTitle(book.title)
         .padding()

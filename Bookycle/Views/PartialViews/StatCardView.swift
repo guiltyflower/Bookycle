@@ -8,6 +8,7 @@
 import SwiftUI
 
 
+
 struct StatCardView: View {
     let title: String
     let value: String
@@ -15,7 +16,7 @@ struct StatCardView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .stroke(lineWidth: 1)
+                .stroke(Color(red: 242/255, green: 220/255, blue: 177/255), lineWidth: 1)
                 .frame(width: 180, height: 90)
             
             RoundedRectangle(cornerRadius: 10)
@@ -23,10 +24,12 @@ struct StatCardView: View {
                 .frame(width: 180, height: 90)
             
             VStack {
-                Text(title)
-                Rectangle()
-                    .frame(width: 180, height: 1)
                 Text(value)
+                    .font(.system(size: 32, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color(red: 169/255, green: 154/255, blue: 123/255))
+                Text(title)
+                
+                
             }
         }
     }

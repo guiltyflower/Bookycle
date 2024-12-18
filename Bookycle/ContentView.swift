@@ -44,6 +44,8 @@ struct ContentView: View {
                               }
                           }
                       }
+            .toolbarBackground(Color(red: 242/255, green: 220/255, blue: 177/255), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         }
         
         
