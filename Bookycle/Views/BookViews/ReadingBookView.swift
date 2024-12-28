@@ -28,10 +28,20 @@ struct ReadingBookView: View {
     var body: some View {
         ZStack {
             LinearGradient(stops: [
-                Gradient.Stop(color: Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255), location: 0.55),
+                Gradient.Stop(color: Color.bookBackground, location: 0.55),
                 Gradient.Stop(color: .white, location: 0.75),
             ], startPoint: .top, endPoint: .bottom)
             .ignoresSafeArea()
+            .opacity(0.8)
+            
+            /* old colours
+             203,194,175
+             Gradient.Stop(color: Color(red: 245 / 255, green: 203 / 255, blue: 175 / 255), location: 0.55)
+             Gradient.Stop(color: Color(red: 245 / 255, green: 245 / 255, blue: 220 / 255), location: 0.55)
+             
+             Gradient.Stop(color: Color(red: 245 / 255, green: 203 / 255, blue: 175 / 255), location: 0.55) this is more yellowish?
+             
+             */
             VStack {
                 ZStack{
                     Image("\(book.imageCoverName)")
